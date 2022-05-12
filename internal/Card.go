@@ -1,37 +1,28 @@
 package internal
 
-import "strconv"
+import (
+	"strconv"
+)
 
-type PlayingСards struct {
+// PlayingСard
+//value 			- Card number
+// valuePerfomans 	- in text 11 - J 12 - Q 13 - K 14 - A
+// suit 			- Card suit 0 - Hearts 1 - Spades 2 - Diamonds 3 -Clubs
+type PlayingСard struct {
 	value          int8
 	valuePerfomans string
 	suit           int8
 }
 
-var deck [52]*PlayingСards
+func FillCard(value, suit int8) PlayingСard {
 
-func NewDeck() *[52]*PlayingСards {
-
-	var value int8
-	var suit int8
-
-	for _, v := range deck {
-
-		value = 2
-		suit = 0
-		v.value = value
-		v.valuePerfomans = returnValuePerfomans(value)
-		v.suit = suit
-
-		value++
-		if value == 14 {
-			value = 2
-			suit++
-		}
+	card := PlayingСard{
+		value:          value,
+		suit:           suit,
+		valuePerfomans: returnValuePerfomans(value),
 	}
 
-	return &deck
-
+	return card
 }
 
 func returnValuePerfomans(number int8) (valuePerfomans string) {

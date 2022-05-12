@@ -1,14 +1,27 @@
 package main
 
 import (
-	"mod/internal"
+	"github.com/Krushong/Poker/internal"
 )
 
 func main() {
 
-	deck := internal.NewDeck()
+	table := internal.NewTable()
 
-	if deck == deck {
+	PlayingDeck := internal.NewDeck()
 
-	}
+	PlayingDeck.ShuffleDeck()
+
+	room := internal.NewRoom()
+
+	room.AddNewPlayerInRoom("")
+
+	PlayingDeck.GiveCardAllPlayerInRoom(room)
+
+	//Стадия игры
+	PlayingDeck.Flop(&table)
+	PlayingDeck.TurnRiver(&table)
+	PlayingDeck.TurnRiver(&table)
+
+	internal.WinChekerPlayer(room, table)
 }
