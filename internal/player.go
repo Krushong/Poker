@@ -6,8 +6,16 @@ type Player struct {
 	ID          string
 	Hand        [2]PlayingСard
 	InGame      bool
-	Score       int8
-	Combination int8
+	Combination Combination
+	Cash        int
+	Diler       bool
+}
+
+type Combination struct {
+	Combination    int8
+	FirstMaxValue  int8
+	SecondMaxValue int8
+	Kicker         int8
 }
 
 func NewPlayer(ID string) Player {
@@ -17,8 +25,9 @@ func NewPlayer(ID string) Player {
 			ID:          ksuid.New().String(),
 			Hand:        [2]PlayingСard{},
 			InGame:      true,
-			Score:       0,
-			Combination: 0,
+			Cash:        1000,
+			Combination: Combination{},
+			Diler:       false,
 		}
 		return player
 	} else {
@@ -26,8 +35,9 @@ func NewPlayer(ID string) Player {
 			ID:          ID,
 			Hand:        [2]PlayingСard{},
 			InGame:      true,
-			Score:       0,
-			Combination: 0,
+			Cash:        1000,
+			Combination: Combination{},
+			Diler:       false,
 		}
 		return player
 	}
