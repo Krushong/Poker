@@ -20,23 +20,31 @@ func main() {
 	room.AddNewPlayerInRoom("")
 	room.AddNewPlayerInRoom("")
 
-	table = room.MakeDiler(table)
-
 	PlayingDeck.GiveCardAllPlayerInRoom(room)
 
 	//Стадия игры
 
 	//стадия торгов
+	playerInGame := room
+	table = playerInGame.MakeDiler(table)
+
+	TradeRound(&playerInGame, &room, table)
 	PlayingDeck.Flop(&table)
-	//стадия торгов
+	TradeRound(&playerInGame, &room, table)
 	PlayingDeck.TurnRiver(&table)
-	//стадия торгов
+	TradeRound(&playerInGame, &room, table)
 	PlayingDeck.TurnRiver(&table)
-	//стадия торгов
+	TradeRound(&playerInGame, &room, table)
 
 	fmt.Println(table.CardOnTable)
 
 	winingPlayers := internal.WinChekerPlayers(room, table)
+
+	if len(winingPlayers) == 1 {
+		table.GiveAllBankPlayer(winingPlayers[0], &room)
+	} else if len(winingPlayers) > 1 {
+		table.SplitBankBetweenAllWinningPlayers(winingPlayers, &room)
+	}
 
 	if len(winingPlayers) == 1 {
 		fmt.Println(winingPlayers[0].Hand)
@@ -47,4 +55,14 @@ func main() {
 			fmt.Println(v.Combination)
 		}
 	}
+}
+
+func TradeRound(playerInGame, room *internal.Room, table internal.Table) {
+
+	internal.NextTradeRound(playerInGame, &table)
+	if playerInGame.LastPlayerInGame() {
+		table.GiveAllBankPlayer((*playerInGame)[0], room)
+		return
+	}
+
 }

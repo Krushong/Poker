@@ -20,6 +20,13 @@ func cheackCombinationPlayer(hand [2]PlayingСard, CardOnTable []PlayingСard) (
 	//Всего есть 10 комбинация
 	//1 Старшая карта 2 Пара 3 Две пары 4 Сет 5 Стрит
 	//6 Флеш 7 ФуллХаус 8 КАРЭ 9 Стрит Флэш 10 ФлешРояль
+	//Кикер реализован не совсем правильно сравнение должно идти по 5 картам где кикер это старшая карта
+	//Тоесть побеждает не тот игрок у кого карта старше а тот у кого 2 по старшенсу 3 по старшенству 4 по старшенсву
+	// или 5 по старшенству если же нет таких карт тогда банк делится - Это справедливо для пары и старшей карты
+	//Для сета (тройки) сравнивается старшая 4 и 5 карта если они равны ничья
+	//Если 2 пары победитель определяется по кикеру 5 старшей карте на столе
+	//Фулл хаус выигрывает по более старшей карте
+	//Каре если оно собралось на столе выигрывает тот у кого более старшая 2 карта
 
 	allCard := CardOnTable
 
@@ -55,7 +62,10 @@ func cheackCombinationPlayer(hand [2]PlayingСard, CardOnTable []PlayingСard) (
 
 func royalFlushCheak(allCard []PlayingСard) bool {
 
-	fiveBestCard := findScoreFiveBestCard(allCard)
+	copyAllCard := make([]PlayingСard, len(allCard))
+	copy(copyAllCard, allCard)
+
+	fiveBestCard := findScoreFiveBestCard(copyAllCard)
 
 	score := int8(0)
 
@@ -170,16 +180,19 @@ func findAllRepetitions(a []int, x int) int {
 
 func straightFlushCheak(allCard []PlayingСard) (bool, int8) {
 
-	dominantSuit := FindDominantSuit(allCard)
+	copyAllCard := make([]PlayingСard, len(allCard))
+	copy(copyAllCard, allCard)
+
+	dominantSuit := FindDominantSuit(copyAllCard)
 	if dominantSuit == 4 {
 		return false, 0
 	}
 
-	allCard = removeAllOtherSuits(allCard)
-	if len(allCard) <= 4 {
+	copyAllCard = removeAllOtherSuits(copyAllCard)
+	if len(copyAllCard) <= 4 {
 		return false, 0
 	} else {
-		return findStreat(allCard)
+		return findStreat(copyAllCard)
 	}
 
 }
@@ -207,7 +220,10 @@ func sortCardInOrder(allCard []PlayingСard) []PlayingСard {
 
 func fourOfAKindCheak(allCard []PlayingСard) (bool, int8) {
 
-	if ok, value := RepeatingCard(allCard, 4); ok {
+	copyAllCard := make([]PlayingСard, len(allCard))
+	copy(copyAllCard, allCard)
+
+	if ok, value := RepeatingCard(copyAllCard, 4); ok {
 		return true, value
 	} else {
 		return false, 0
@@ -246,11 +262,14 @@ func RepeatingCard(allCard []PlayingСard, valueRepeating int8) (bool, int8) {
 
 func fullHouseCheak(allCard []PlayingСard) (bool, int8, int8) {
 
-	if ok, firstMaxValue := RepeatingCard(allCard, 3); ok {
+	copyAllCard := make([]PlayingСard, len(allCard))
+	copy(copyAllCard, allCard)
 
-		allCard = removeAllFindedCard(allCard, firstMaxValue)
+	if ok, firstMaxValue := RepeatingCard(copyAllCard, 3); ok {
 
-		if ok, secondMaxValue := RepeatingCard(allCard, 2); ok {
+		copyAllCard = removeAllFindedCard(copyAllCard, firstMaxValue)
+
+		if ok, secondMaxValue := RepeatingCard(copyAllCard, 2); ok {
 			return true, firstMaxValue, secondMaxValue
 		} else {
 			return false, 0, 0
@@ -277,14 +296,17 @@ func removeAllFindedCard(allCard []PlayingСard, value int8) []PlayingСard {
 
 func flushCheak(allCard []PlayingСard) (bool, int8, int8) {
 
-	dominantSuit := FindDominantSuit(allCard)
+	copyAllCard := make([]PlayingСard, len(allCard))
+	copy(copyAllCard, allCard)
+
+	dominantSuit := FindDominantSuit(copyAllCard)
 	if dominantSuit == 4 {
 		return false, 0, 0
 	}
-	allCard = removeAllOtherSuits(allCard)
+	copyAllCard = removeAllOtherSuits(copyAllCard)
 
-	if len(allCard) >= 5 {
-		maxValue := findMaxValue(allCard)
+	if len(copyAllCard) >= 5 {
+		maxValue := findMaxValue(copyAllCard)
 
 		return true, maxValue, 0
 	}
@@ -309,7 +331,10 @@ func findMaxValue(allCard []PlayingСard) int8 {
 
 func straightCheak(allCard []PlayingСard) (bool, int8) {
 
-	return findStreat(allCard)
+	copyAllCard := make([]PlayingСard, len(allCard))
+	copy(copyAllCard, allCard)
+
+	return findStreat(copyAllCard)
 
 }
 
@@ -345,11 +370,14 @@ func findStreat(allCard []PlayingСard) (bool, int8) {
 
 func threeOfAKindCheak(allCard []PlayingСard) (bool, int8) {
 
-	if ok, firstMaxValue := RepeatingCard(allCard, 3); ok {
+	copyAllCard := make([]PlayingСard, len(allCard))
+	copy(copyAllCard, allCard)
 
-		allCard = removeAllFindedCard(allCard, firstMaxValue)
+	if ok, firstMaxValue := RepeatingCard(copyAllCard, 3); ok {
 
-		if ok, secondMaxValue := RepeatingCard(allCard, 3); ok {
+		copyAllCard = removeAllFindedCard(copyAllCard, firstMaxValue)
+
+		if ok, secondMaxValue := RepeatingCard(copyAllCard, 3); ok {
 			if firstMaxValue > secondMaxValue {
 				return true, firstMaxValue
 			} else {
@@ -366,15 +394,18 @@ func threeOfAKindCheak(allCard []PlayingСard) (bool, int8) {
 
 func twoPairCheak(allCard []PlayingСard) (bool, int8, int8) {
 
-	if ok, firstValue := RepeatingCard(allCard, 2); ok {
+	copyAllCard := make([]PlayingСard, len(allCard))
+	copy(copyAllCard, allCard)
 
-		allCard = removeAllFindedCard(allCard, firstValue)
+	if ok, firstValue := RepeatingCard(copyAllCard, 2); ok {
 
-		if ok, secondValue := RepeatingCard(allCard, 2); ok {
+		copyAllCard = removeAllFindedCard(copyAllCard, firstValue)
 
-			allCard = removeAllFindedCard(allCard, secondValue)
+		if ok, secondValue := RepeatingCard(copyAllCard, 2); ok {
 
-			if ok, thirdValue := RepeatingCard(allCard, 2); ok {
+			copyAllCard = removeAllFindedCard(copyAllCard, secondValue)
+
+			if ok, thirdValue := RepeatingCard(copyAllCard, 2); ok {
 
 				allValue := []int8{firstValue, secondValue, thirdValue}
 
@@ -411,7 +442,10 @@ func sortIntInOrder(allValue []int8) []int8 {
 
 func pairCheak(allCard []PlayingСard) (bool, int8) {
 
-	if ok, firstMaxValue := RepeatingCard(allCard, 2); ok {
+	copyAllCard := make([]PlayingСard, len(allCard))
+	copy(copyAllCard, allCard)
+
+	if ok, firstMaxValue := RepeatingCard(copyAllCard, 2); ok {
 		return false, firstMaxValue
 	} else {
 		return false, 0

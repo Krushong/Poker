@@ -74,6 +74,16 @@ func Test_royalFlushCheak(t *testing.T) {
 				{13, "K", 2},
 				{10, "10", 2},
 				{12, "Q", 2},
+			}}, true},
+		{"Win v2",
+			args{[]PlayingСard{
+				{13, "K", 0},
+				{9, "9", 0},
+				{10, "10", 3},
+				{3, "3", 1},
+				{6, "6", 0},
+				{3, "3", 0},
+				{13, "K", 2},
 			}}, true}}
 
 	for _, tt := range tests {
@@ -148,7 +158,17 @@ func Test_fourOfAKindCheak(t *testing.T) {
 		want  bool
 		want1 int8
 	}{
-		{"Straight v3",
+		{"fourOfAKindCheak v1",
+			args{[]PlayingСard{
+				{5, "5", 2},
+				{14, "A", 1},
+				{5, "5", 1},
+				{6, "6", 3},
+				{5, "5", 0},
+				{5, "5", 0},
+				{2, "2", 3},
+			}}, true, 11},
+		{"fourOfAKindCheak v2",
 			args{[]PlayingСard{
 				{2, "2", 4},
 				{3, "3", 2},
