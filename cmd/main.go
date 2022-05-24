@@ -2,18 +2,18 @@ package main
 
 import (
 	"fmt"
-	"github.com/Krushong/Poker/internal"
+	"github.com/Krushong/Poker"
 )
 
 func main() {
 
-	table := internal.NewTable()
+	table := Poker.NewTable()
 
-	PlayingDeck := internal.NewDeck()
+	PlayingDeck := Poker.NewDeck()
 
 	PlayingDeck.ShuffleDeck()
 
-	room := internal.NewRoom()
+	room := Poker.NewRoom()
 
 	room.AddNewPlayerInRoom("")
 	room.AddNewPlayerInRoom("")
@@ -38,7 +38,7 @@ func main() {
 
 	fmt.Println(table.CardOnTable)
 
-	winingPlayers := internal.WinChekerPlayers(room, table)
+	winingPlayers := Poker.WinChekerPlayers(room, table)
 
 	if len(winingPlayers) == 1 {
 		table.GiveAllBankPlayer(winingPlayers[0], &room)
@@ -57,9 +57,9 @@ func main() {
 	}
 }
 
-func TradeRound(playerInGame, room *internal.Room, table internal.Table) {
+func TradeRound(playerInGame, room *Poker.Room, table Poker.Table) {
 
-	internal.NextTradeRound(playerInGame, &table)
+	Poker.NextTradeRound(playerInGame, &table)
 	if playerInGame.LastPlayerInGame() {
 		table.GiveAllBankPlayer((*playerInGame)[0], room)
 		return

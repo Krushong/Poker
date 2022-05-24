@@ -1,4 +1,4 @@
-package internal
+package Poker
 
 import "github.com/segmentio/ksuid"
 
@@ -9,6 +9,7 @@ type Player struct {
 	Combination Combination
 	Cash        int
 	Diler       bool
+	LastBet     int
 }
 
 type Combination struct {

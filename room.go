@@ -1,4 +1,4 @@
-package internal
+package Poker
 
 import (
 	"fmt"
@@ -77,7 +77,7 @@ func NextTradeRound(playersInGame *Room, table *Table) {
 	idCurrentUser := returnCurentUser(idAgressor, countPlayer)
 
 	for true {
-		for i, _ := range *playersInGame {
+		for i := range *playersInGame {
 			if idAgressor == 777 {
 				break
 			} else if len(*playersInGame) <= idCurrentUser {
